@@ -83,15 +83,31 @@ button{
 </div>
 
 <script>
-function summarize(){
-  const text=document.getElementById('input').value.trim();
-  if(!text){
-    document.getElementById('output').innerText='Incolla un testo prima.';
+async function summarize() {
+  const text = document.getElementById("input").value.trim();
+
+  if (!text) {
+    document.getElementById("output").innerText = "Incolla un testo prima.";
     return;
   }
-  const sentences=text.split(/(?<=[.!?])\s+/);
-  const summary=sentences.slice(0,4).join(' ');
-  document.getElementById('output').innerText='📚 RIASSUNTO\n\n'+summary;
+
+  document.getElementById("output").innerText = "⏳ Sto generando il riassunto...";
+
+  try {
+    const response = await fetch("/api/summarize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("output").innerText = data.summary || "Errore nel riassunto.";
+  } catch (err) {
+    document.getElementById("output").innerText = "Errore di connessione.";
+  }
 }
 </script>
 </body>
