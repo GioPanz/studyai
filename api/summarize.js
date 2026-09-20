@@ -33,7 +33,7 @@ if (!response.ok) {
     return res.status(200).json({
       summary: data.choices[0].message.content,
     });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
+} catch (err) {
+  console.error("ERRORE OPENROUTER:", err);
+  return res.status(500).json({ error: String(err) });
 }
