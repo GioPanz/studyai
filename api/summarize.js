@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Metodo non consentito" });
@@ -25,15 +24,21 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-if (!response.ok) {
-  return res.status(response.status).json({
-    error: JSON.stringify(data)
-  });
-}
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: JSON.stringify(data),
+      });
+    }
+
     return res.status(200).json({
       summary: data.choices[0].message.content,
     });
-} catch (err) {
-  console.error("ERRORE OPENROUTER:", err);
-  return res.status(500).json({ error: String(err) });
+
+  } catch (err) {
+    console.error("ERRORE OPENROUTER:", err);
+    return res.status(500).json({
+      error: String(err),
+    });
+  }
 }
