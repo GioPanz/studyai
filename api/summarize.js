@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Metodo non consentito" });
   }
 
-  const { text } = req.body;
+  const { text, mode = "summary" } = req.body;
 
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -17,7 +17,14 @@ model: "openrouter/free",
         messages: [
           {
             role: "user",
-            content: `Riassumi questo testo in italiano in modo chiaro:\n\n${text}`,
+content:
+  mode === "quiz"
+    ? `Crea un quiz di 5 domande a risposta multipla in italiano sul seguente testo.
+
+${text}`
+    : `Riassumi questo testo in italiano in modo chiaro.
+
+${text}`,
           },
         ],
       }),
